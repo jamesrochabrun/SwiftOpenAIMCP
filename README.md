@@ -7,6 +7,8 @@
 
 A universal MCP (Model Context Protocol) server that provides access to OpenAI's APIs through a standardized interface. Works with any MCP-compatible client including Claude Desktop, Claude Code, Cursor, Windsurf, VS Code, and more.
 
+https://github.com/user-attachments/assets/d93f3700-f33d-42eb-8c23-4ad64fd359e1
+
 ## What is this?
 
 This MCP server enables any AI assistant or development tool that supports the Model Context Protocol to interact with OpenAI's APIs. Once configured, your AI assistant can:
