@@ -26,17 +26,23 @@ Built with Swift for high performance and reliability.
 
 ## 🌐 Supported Providers
 
-This server works with any OpenAI-compatible API:
+This server works with any **OpenAI-compatible** API endpoint:
 
+### Fully Compatible
 - **OpenAI** (default) - GPT-4o, o3-mini, o3, DALL-E, embeddings
-- **Anthropic** - Claude models via OpenAI-compatible endpoint
-- **Google Gemini** - Gemini Pro, Gemini Flash
-- **Ollama** - Run LLMs locally (Llama, Mistral, etc.)
-- **Groq** - Lightning-fast inference for open models
-- **xAI** - Grok models
-- **OpenRouter** - Access 100+ models through one API
-- **DeepSeek** - Specialized coding and reasoning models
-- **Azure OpenAI** - Enterprise-grade OpenAI services
+- **Azure OpenAI** - Enterprise OpenAI services with compatible endpoints
+- **Ollama** - Local LLMs with OpenAI-compatible API (`/v1` endpoints)
+- **Groq** - Fast inference using their OpenAI-compatible endpoint
+- **OpenRouter** - Unified access to 100+ models via OpenAI format
+- **DeepSeek** - Coding models with OpenAI-compatible API
+
+### Requires Compatible Endpoints
+These providers have their own APIs but may offer OpenAI-compatible endpoints:
+- **Anthropic** - Check if they provide an OpenAI-compatible endpoint
+- **Google Gemini** - May require specific configuration
+- **xAI** - Check for OpenAI-compatible access
+
+**Note**: Image generation (DALL-E) only works with OpenAI. Other providers may support different image models.
 
 ## 📦 Installation
 
@@ -122,22 +128,24 @@ Send messages to OpenAI GPT models and get responses.
 "Use the chat tool to ask o3-mini to explain quantum computing in simple terms"
 
 ### image_generation
-Generate images using DALL-E models.
+Generate images using AI models.
 
 **Parameters:**
 - **prompt** (required) - Text description of the image you want
-- **model** - "dall-e-2" or "dall-e-3" (default: "dall-e-3")
-- **size** - Image dimensions:
-  - DALL-E 2: Only "1024x1024"
-  - DALL-E 3: "1024x1024", "1792x1024", or "1024x1792"
-- **quality** - "standard" or "hd" (DALL-E 3 only, default: "standard")
-- **n** - Number of images to generate (1-10 for DALL-E 2, only 1 for DALL-E 3)
+- **model** - Model to use (default: "dall-e-3"). Examples:
+  - OpenAI: "dall-e-2", "dall-e-3"
+  - Other providers: Use their specific model names
+- **size** - Image dimensions (default: "1024x1024")
+- **quality** - "standard" or "hd" (default: "standard")
+- **n** - Number of images to generate (default: 1)
 
 **Example usage:**
-"Generate an HD image of a futuristic city at sunset using DALL-E 3"
+"Generate an HD image of a futuristic city at sunset"
+
+**Note:** Image generation parameters like size and quality may vary by provider. Currently optimized for OpenAI's DALL-E models.
 
 ### list_models
-List available OpenAI models.
+List available models from your provider.
 
 **Parameters:**
 - **filter** - Optional text to filter model names (e.g., "gpt" to see only GPT models)

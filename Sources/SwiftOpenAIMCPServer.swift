@@ -288,7 +288,8 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
     let quality = args["quality"]?.stringValue ?? "standard"
     let n = args["n"]?.intValue ?? 1
     
-    let imageModel: CreateImageParameters.Model = model == "dall-e-2" ? .dallE2 : .dallE3
+    // Use custom model to support any provider's image models
+    let imageModel: CreateImageParameters.Model = .custom(model)
     let imageQuality: CreateImageParameters.Quality = quality == "hd" ? .hd : .standard
     
     let parameters = CreateImageParameters(
@@ -332,9 +333,10 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
     
     let model = args["model"]?.stringValue ?? "text-embedding-ada-002"
     
+    // Use custom model to support any provider's embedding models
     let parameters = EmbeddingParameter(
       input: input,
-      model: model == "text-embedding-ada-002" ? .textEmbeddingAda002 : .textEmbedding3Small,
+      model: .custom(model),
       encodingFormat: nil,
       dimensions: nil
     )
