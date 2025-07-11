@@ -1,5 +1,7 @@
 # SwiftOpenAI MCP Server
 
+<img width="953" height="429" alt="Image" src="https://github.com/user-attachments/assets/4e0c7b30-eb23-4051-ab23-43021d075652" />
+
 [![npm version](https://img.shields.io/npm/v/swiftopenai-mcp.svg)](https://www.npmjs.com/package/swiftopenai-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
