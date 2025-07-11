@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+const { spawn } = require('child_process');
+const path = require('path');
+const os = require('os');
+
+// Detect platform and architecture
+const platform = os.platform();
+const arch = os.arch();
+
+// Map Node.js arch to our binary naming
+const archMap = {
+  'x64': 'x64',
+  'arm64': 'arm64'
+};
+
+const mappedArch = archMap[arch] || arch;
+
+// Construct path to binary
+const binaryName = 'swiftopenai-mcp';
+const binaryPath = path.join(__dirname, '..', 'dist', `${platform}-${mappedArch}`, binaryName);
+
+// Check if binary exists
+const fs = require('fs');
+if (!fs.existsSync(binaryPath)) {
+  console.error(`Binary not found at ${binaryPath}`);
+  console.error(`Platform: ${platform}, Architecture: ${mappedArch}`);
+  console.error('Please ensure the package was installed correctly.');
+  process.exit(1);
+}
+
+// Spawn the binary with all arguments and environment
+const child = spawn(binaryPath, process.argv.slice(2), {
+  stdio: 'inherit',
+  env: process.env
+});
+
+// Handle process termination
+child.on('error', (err) => {
+  console.error('Failed to start SwiftOpenAI MCP server:', err);
+  process.exit(1);
+});
+
+child.on('exit', (code, signal) => {
+  if (signal) {
+    process.kill(process.pid, signal);
+  } else {
+    process.exit(code || 0);
+  }
+});
+
+// Forward signals to child process
+['SIGINT', 'SIGTERM', 'SIGHUP'].forEach(signal => {
+  process.on(signal, () => {
+    child.kill(signal);
+  });
+});

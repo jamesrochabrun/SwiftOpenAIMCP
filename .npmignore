@@ -1,0 +1,38 @@
+# Source files
+Sources/
+*.swift
+
+# Build artifacts
+.build/
+.swiftpm/
+*.xcodeproj/
+
+# Test files
+test*.sh
+test*.py
+*.test.js
+
+# Development files
+.gitignore
+.github/
+claude-desktop-config.json
+setup-*.sh
+debug-*.sh
+
+# macOS files
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Keep only what's needed for npm
+# - dist/
+# - bin/
+# - scripts/
+# - package.json
+# - README.md
+# - LICENSE
+# - index.js

@@ -1,0 +1,60 @@
+{
+  "name": "swiftopenai-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for SwiftOpenAI - access OpenAI APIs through Model Context Protocol",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "openai",
+    "swift",
+    "gpt",
+    "dall-e",
+    "embeddings",
+    "ai",
+    "llm"
+  ],
+  "author": "James Rochabrun",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamesrochabrun/SwiftOpenAIMCP.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jamesrochabrun/SwiftOpenAIMCP/issues"
+  },
+  "homepage": "https://github.com/jamesrochabrun/SwiftOpenAIMCP#readme",
+  "main": "index.js",
+  "bin": {
+    "swiftopenai-mcp": "./bin/swiftopenai-mcp"
+  },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js",
+    "build": "swift build -c release",
+    "build:all": "npm run build:macos && npm run build:linux",
+    "build:macos": "swift build -c release --arch arm64 --arch x86_64",
+    "build:linux": "docker run --rm -v \"$PWD\":/workspace -w /workspace swift:latest swift build -c release",
+    "prepare-dist": "node scripts/prepare-dist.js"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "scripts/",
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

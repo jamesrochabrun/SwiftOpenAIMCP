@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "swiftopenai": {
+      "command": "/Users/jamesrochabrun/Desktop/git/SwiftOpenAIMCP/.build/debug/swiftopenai-mcp",
+      "args": [],
+      "env": {
+        "OPENAI_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
