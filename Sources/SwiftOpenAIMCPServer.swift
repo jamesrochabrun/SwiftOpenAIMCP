@@ -300,26 +300,62 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
       size: size
     )
     
-    let response = try await openAIService.createImages(parameters: parameters)
-    
-    let urls = response.data?.compactMap { $0.url }.joined(separator: "\n") ?? ""
-    return "Generated \(response.data?.count ?? 0) image(s):\n\(urls)"
+    do {
+      let response = try await openAIService.createImages(parameters: parameters)
+      
+      let urls = response.data?.compactMap { $0.url }.joined(separator: "\n") ?? ""
+      return "Generated \(response.data?.count ?? 0) image(s):\n\(urls)"
+    } catch {
+      // Check for common errors indicating unsupported feature
+      let errorMessage = error.localizedDescription.lowercased()
+      
+      if errorMessage.contains("404") || errorMessage.contains("not found") {
+        return "Image generation is not supported by this provider. This feature requires a provider with image generation capabilities (e.g., OpenAI with DALL-E)."
+      }
+      
+      if errorMessage.contains("method not allowed") || errorMessage.contains("405") {
+        return "This provider does not support image generation. Try using OpenAI or another provider with image capabilities."
+      }
+      
+      // Re-throw for generic error handling
+      throw error
+    }
   }
   
   private func performListModels(arguments: Value?) async throws -> String {
     let filter = arguments?.objectValue?["filter"]?.stringValue
     
-    let models = try await openAIService.listModels()
-    
-    var modelList = models.data
-    if let filter = filter {
-      modelList = modelList.filter { $0.id.lowercased().contains(filter.lowercased()) }
+    do {
+      let models = try await openAIService.listModels()
+      
+      var modelList = models.data
+      if let filter = filter {
+        modelList = modelList.filter { $0.id.lowercased().contains(filter.lowercased()) }
+      }
+      
+      let sortedModels = modelList.sorted { $0.id < $1.id }
+      let modelNames = sortedModels.map { $0.id }.joined(separator: "\n")
+      
+      if modelNames.isEmpty {
+        return "No models found. This provider may not support model listing or may require different authentication."
+      }
+      
+      return "Available models:\n\(modelNames)"
+    } catch {
+      // Check for common errors indicating unsupported feature
+      let errorMessage = error.localizedDescription.lowercased()
+      
+      if errorMessage.contains("404") || errorMessage.contains("not found") {
+        return "Model listing is not supported by this provider. You can still use the chat tool by specifying a model name directly."
+      }
+      
+      if errorMessage.contains("method not allowed") || errorMessage.contains("405") {
+        return "This provider does not support listing models. Check the provider's documentation for available model names."
+      }
+      
+      // Re-throw for generic error handling
+      throw error
     }
-    
-    let sortedModels = modelList.sorted { $0.id < $1.id }
-    let modelNames = sortedModels.map { $0.id }.joined(separator: "\n")
-    
-    return "Available models:\n\(modelNames)"
   }
   
   private func performCreateEmbedding(arguments: Value?) async throws -> String {
@@ -341,18 +377,34 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
       dimensions: nil
     )
     
-    let response = try await openAIService.createEmbeddings(parameters: parameters)
-    
-    guard let embedding = response.data.first else {
-      throw OpenAIServiceError.noEmbeddingGenerated
+    do {
+      let response = try await openAIService.createEmbeddings(parameters: parameters)
+      
+      guard let embedding = response.data.first else {
+        throw OpenAIServiceError.noEmbeddingGenerated
+      }
+      
+      return """
+          Embedding generated:
+          Model: \(response.model ?? "unknown")
+          Dimensions: \(embedding.embedding.count)
+          First 10 values: \(embedding.embedding.prefix(10).map { String(format: "%.4f", $0) }.joined(separator: ", "))...
+          Total tokens: \(response.usage?.totalTokens ?? 0)
+          """
+    } catch {
+      // Check for common errors indicating unsupported feature
+      let errorMessage = error.localizedDescription.lowercased()
+      
+      if errorMessage.contains("404") || errorMessage.contains("not found") {
+        return "Embeddings are not supported by this provider. This feature requires a provider with embedding capabilities (e.g., OpenAI, Cohere)."
+      }
+      
+      if errorMessage.contains("method not allowed") || errorMessage.contains("405") {
+        return "This provider does not support creating embeddings. Try using OpenAI or another provider with embedding support."
+      }
+      
+      // Re-throw for generic error handling
+      throw error
     }
-    
-    return """
-        Embedding generated:
-        Model: \(response.model ?? "unknown")
-        Dimensions: \(embedding.embedding.count)
-        First 10 values: \(embedding.embedding.prefix(10).map { String(format: "%.4f", $0) }.joined(separator: ", "))...
-        Total tokens: \(response.usage?.totalTokens ?? 0)
-        """
   }
 }
