@@ -180,151 +180,95 @@ Add to your Continue configuration:
 
 ## 🛠️ Available Tools
 
-### 1. chat_completion
-
-Send messages to OpenAI chat models and receive responses.
+### chat_completion
+Send messages to OpenAI GPT models and get responses.
 
 **Parameters:**
-- `messages` (required): Array of message objects with `role` and `content`
-  - `role`: "system", "user", or "assistant"
-  - `content`: The message text
-- `model`: Model to use (default: "gpt-4o")
-- `temperature`: Sampling temperature 0-2 (default: 0.7)
-- `max_tokens`: Maximum tokens to generate
-- `stream`: Enable streaming responses (default: false)
+- **messages** (required) - Array of conversation messages, each with:
+  - role: "system", "user", or "assistant"
+  - content: The message text
+- **model** - Which model to use (default: "gpt-4o"). Examples: gpt-4o, o3-mini, o3
+- **temperature** - Creativity level from 0-2 (default: 0.7). Lower = more focused, higher = more creative
+- **max_tokens** - Maximum length of the response
+- **stream** - Whether to stream the response in real-time (default: false)
 
-**Example:**
-```
-Tool: chat_completion
-Arguments: {
-  "messages": [
-    {"role": "user", "content": "Write a haiku about coding"}
-  ],
-  "model": "gpt-4o"
-}
-```
+**Example usage:**
+"Use the chat tool to ask o3-mini to explain quantum computing in simple terms"
 
-### 2. image_generation
-
+### image_generation
 Generate images using DALL-E models.
 
 **Parameters:**
-- `prompt` (required): Text description of the desired image
-- `model`: "dall-e-2" or "dall-e-3" (default: "dall-e-3")
-- `size`: Image dimensions
-  - DALL-E 2: "1024x1024"
-  - DALL-E 3: "1024x1024", "1792x1024", "1024x1792"
-- `quality`: "standard" or "hd" (DALL-E 3 only, default: "standard")
-- `n`: Number of images (1-10 for DALL-E 2, only 1 for DALL-E 3)
+- **prompt** (required) - Text description of the image you want
+- **model** - "dall-e-2" or "dall-e-3" (default: "dall-e-3")
+- **size** - Image dimensions:
+  - DALL-E 2: Only "1024x1024"
+  - DALL-E 3: "1024x1024", "1792x1024", or "1024x1792"
+- **quality** - "standard" or "hd" (DALL-E 3 only, default: "standard")
+- **n** - Number of images to generate (1-10 for DALL-E 2, only 1 for DALL-E 3)
 
-**Example:**
-```
-Tool: image_generation
-Arguments: {
-  "prompt": "A futuristic city at sunset",
-  "model": "dall-e-3",
-  "quality": "hd"
-}
-```
+**Example usage:**
+"Generate an HD image of a futuristic city at sunset using DALL-E 3"
 
-### 3. list_models
-
-List all available OpenAI models.
+### list_models
+List available OpenAI models.
 
 **Parameters:**
-- `filter`: Optional string to filter model names
+- **filter** - Optional text to filter model names (e.g., "gpt" to see only GPT models)
 
-**Example:**
-```
-Tool: list_models
-Arguments: {
-  "filter": "gpt"
-}
-```
+**Example usage:**
+"List all available models" or "Show me all GPT models"
 
-### 4. create_embedding
-
-Generate embeddings for text input.
+### create_embedding
+Create embeddings for text.
 
 **Parameters:**
-- `input` (required): Text to create embeddings for
-- `model`: Embedding model (default: "text-embedding-ada-002")
+- **input** (required) - The text to create embeddings for
+- **model** - Embedding model to use (default: "text-embedding-ada-002")
 
-**Example:**
-```
-Tool: create_embedding
-Arguments: {
-  "input": "The quick brown fox jumps over the lazy dog"
-}
-```
+**Example usage:**
+"Create embeddings for the text 'The quick brown fox jumps over the lazy dog'"
 
 ## 💡 Usage Examples
 
-> **Note**: The exact syntax for invoking these tools depends on your MCP client. These examples show the tool names and parameters.
+> **Note**: The exact way to invoke these tools depends on your MCP client. These examples show how you might naturally ask for these tools.
 
 ### Basic Chat
 
-Have a conversation with GPT models:
+"Use the chat tool to ask o3-mini to explain quantum computing in simple terms"
 
-```json
-{
-  "tool": "chat_completion",
-  "arguments": {
-    "messages": [
-      {"role": "user", "content": "Explain quantum computing in simple terms"}
-    ],
-    "model": "gpt-4o"
-  }
-}
-```
+"Have gpt-4o write a poem about the ocean"
+
+"Ask o3 to help me debug this Python code: [paste code]"
 
 ### Image Generation
 
-Create images with DALL-E:
+"Generate an HD image of a serene Japanese garden with cherry blossoms"
 
-```json
-{
-  "tool": "image_generation",
-  "arguments": {
-    "prompt": "A serene Japanese garden with cherry blossoms",
-    "model": "dall-e-3",
-    "quality": "hd",
-    "size": "1792x1024"
-  }
-}
-```
+"Create a DALL-E 3 image of a futuristic spaceship in 1792x1024 resolution"
+
+"Make a standard quality image of a cozy coffee shop interior"
 
 ### Model Exploration
 
-Discover available models:
+"List all available models"
 
-```json
-{
-  "tool": "list_models",
-  "arguments": {
-    "filter": "gpt"
-  }
-}
-```
+"Show me only the GPT models"
+
+"What embedding models are available?"
 
 ### Multi-turn Conversations
 
-Maintain context across messages:
+"Use the chat tool to have a cooking conversation:
+- First set the system message: 'You are a helpful cooking assistant'
+- Then ask: 'I want to make pasta for dinner'
+- Continue the conversation based on the response"
 
-```json
-{
-  "tool": "chat_completion",
-  "arguments": {
-    "messages": [
-      {"role": "system", "content": "You are a helpful cooking assistant"},
-      {"role": "user", "content": "I want to make pasta for dinner"},
-      {"role": "assistant", "content": "I'd be happy to help you make pasta! What type of pasta dish are you interested in?"},
-      {"role": "user", "content": "Something with tomatoes and basil"}
-    ],
-    "model": "gpt-4o"
-  }
-}
-```
+### Embeddings
+
+"Create embeddings for my product description: 'Eco-friendly water bottle made from recycled materials'"
+
+"Generate embeddings for this paragraph about machine learning"
 
 ## 🔒 Security Best Practices
 
