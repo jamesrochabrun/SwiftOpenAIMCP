@@ -35,7 +35,6 @@ npm install -g swiftopenai-mcp
 ### Prerequisites
 
 - Node.js 16 or higher
-- An OpenAI API key (get one at [platform.openai.com](https://platform.openai.com))
 
 ## 🔧 Configuration
 
@@ -238,11 +237,9 @@ MIT License - see [LICENSE](LICENSE) file for details
 - Implements the [Model Context Protocol](https://modelcontextprotocol.io)
 - Uses the [MCP Swift SDK](https://github.com/modelcontextprotocol/swift-sdk)
 
-## 📞 Support
+## Support
 
 - **Issues**: [GitHub Issues](https://github.com/jamesrochabrun/SwiftOpenAIMCP/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/jamesrochabrun/SwiftOpenAIMCP/discussions)
 
 ---
-
-Made with ❤️ by [James Rochabrun](https://github.com/jamesrochabrun)
