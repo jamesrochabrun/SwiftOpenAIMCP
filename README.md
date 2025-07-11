@@ -125,7 +125,7 @@ Send messages to OpenAI GPT models and get responses.
 - **max_tokens** - Maximum length of the response
 
 **Example usage:**
-"Use the chat tool to ask o3-mini to explain quantum computing in simple terms"
+"Ask o3-mini to explain quantum computing in simple terms"
 
 ### image_generation
 Generate images using AI models.
@@ -167,18 +167,33 @@ Create embeddings for text.
 
 > **Note**: The exact way to invoke these tools depends on your MCP client.
 
-### 🗣️ Chat Conversations
+### Chat Conversations
 
-**Simple questions:**
-- "Use the chat tool to ask o3-mini to explain quantum computing"
-- "Have gpt-4o write a haiku about the ocean"
-- "Ask o3 to help debug this Python code: [your code]"
+**Powerful use cases:**
 
-**Complex conversations:**
-- "Start a cooking assistant conversation with system prompt 'You are a helpful Italian chef'"
-- "Continue the conversation asking about pasta recipes"
+**Get a second opinion from another AI:**
+- "Send this entire conversation to o3-mini and ask what it thinks"
+- "Have gpt-4o analyze what we've discussed and suggest improvements"
 
-### 🎨 Image Generation
+**Deep analysis:**
+- "Ask o3 to find any logical flaws in our reasoning so far"
+- "Have o3-mini summarize the key decisions we've made"
+
+**Cross-model collaboration:**
+- "Get o3's perspective on this problem we're solving"
+- "Ask gpt-4o to critique the code we just wrote"
+- "Have o3-mini explain this differently for a beginner"
+
+**Context-aware help:**
+- "Based on our conversation, have o3 create a step-by-step tutorial"
+- "Ask gpt-4o to generate test cases for the solution we discussed"
+
+**Role-playing scenarios:**
+- "Have o3-mini act as a senior developer and review our approach"
+- "Ask gpt-4o to play devil's advocate on our architecture"
+- "Get o3 to explain this as if teaching a computer science class"
+
+### Image Generation
 
 **Quick generations:**
 - "Generate an image of a sunset over mountains"
@@ -188,13 +203,13 @@ Create embeddings for text.
 - "Make a 1792x1024 image of a cozy coffee shop interior"
 - "Generate a standard quality image of abstract art"
 
-### 🔍 Model Discovery
+### Model Discovery
 
 - "List all available models"
 - "Show me only the GPT models"
 - "What embedding models are available?"
 
-### 📊 Embeddings
+### Embeddings
 
 - "Create embeddings for: 'Revolutionary new smartphone with AI features'"
 - "Generate embeddings for this product description: [your text]"
