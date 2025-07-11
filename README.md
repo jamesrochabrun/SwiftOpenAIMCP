@@ -18,11 +18,25 @@ Built with Swift for high performance and reliability.
 
 ## 🚀 Features
 
-- **Chat Completions** - Interact with gpt-4o, o3-mini, o3, and other chat models
+- **Multi-Provider Support** - Works with 9+ AI providers including OpenAI, Anthropic, Google Gemini, Ollama, Groq, and more
+- **Chat Completions** - Interact with gpt-4o, o3-mini, o3, Claude, Gemini, and other chat models
 - **Image Generation** - Create images using DALL-E 2 and DALL-E 3
 - **Embeddings** - Generate text embeddings for semantic search and analysis
-- **Model Listing** - Retrieve available OpenAI models
-- **Alternative Providers** - Support for OpenAI-compatible APIs (Groq, OpenRouter, etc.)
+- **Model Listing** - Retrieve available models from any provider
+
+## 🌐 Supported Providers
+
+This server works with any OpenAI-compatible API:
+
+- **OpenAI** (default) - GPT-4o, o3-mini, o3, DALL-E, embeddings
+- **Anthropic** - Claude models via OpenAI-compatible endpoint
+- **Google Gemini** - Gemini Pro, Gemini Flash
+- **Ollama** - Run LLMs locally (Llama, Mistral, etc.)
+- **Groq** - Lightning-fast inference for open models
+- **xAI** - Grok models
+- **OpenRouter** - Access 100+ models through one API
+- **DeepSeek** - Specialized coding and reasoning models
+- **Azure OpenAI** - Enterprise-grade OpenAI services
 
 ## 📦 Installation
 
@@ -40,6 +54,7 @@ npm install -g swiftopenai-mcp
 
 Add this configuration to your MCP client:
 
+### OpenAI (default)
 ```json
 {
   "mcpServers": {
@@ -47,18 +62,36 @@ Add this configuration to your MCP client:
       "command": "npx",
       "args": ["-y", "swiftopenai-mcp"],
       "env": {
-        "OPENAI_API_KEY": "your-api-key-here"
+        "API_KEY": "sk-..."
       }
     }
   }
 }
 ```
 
-**For alternative providers** (Groq, OpenRouter, etc.), add the base URL:
+### Other Providers
+
+**Groq** (fast open-source models):
 ```json
 "env": {
-  "OPENAI_API_KEY": "your-provider-api-key",
-  "OPENAI_BASE_URL": "https://api.groq.com/openai/v1"
+  "API_KEY": "gsk_...",
+  "API_BASE_URL": "https://api.groq.com/openai/v1"
+}
+```
+
+**Ollama** (local models):
+```json
+"env": {
+  "API_KEY": "ollama",
+  "API_BASE_URL": "http://localhost:11434/v1"
+}
+```
+
+**OpenRouter** (multiple providers):
+```json
+"env": {
+  "API_KEY": "sk-or-v1-...",
+  "API_BASE_URL": "https://openrouter.ai/api/v1"
 }
 ```
 
@@ -201,10 +234,10 @@ This should output the MCP initialization message.
 
 ### Common Issues
 
-- **"Missing API key" error**: Set the `OPENAI_API_KEY` environment variable in your configuration
+- **"Missing API key" error**: Set the `API_KEY` environment variable in your configuration
 - **"Invalid API key" error**: Double-check your API key is correct and active
 - **Timeout errors**: Some operations (like image generation) can take time; be patient
-- **Rate limit errors**: You may be hitting OpenAI's rate limits; wait a bit and try again
+- **Rate limit errors**: You may be hitting your provider's rate limits; wait a bit and try again
 
 ## 🏗️ Building from Source
 

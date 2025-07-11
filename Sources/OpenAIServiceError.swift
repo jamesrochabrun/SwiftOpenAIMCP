@@ -14,7 +14,7 @@ enum OpenAIServiceError: LocalizedError {
   var errorDescription: String? {
     switch self {
     case .missingAPIKey:
-      return "OPENAI_API_KEY environment variable is not set"
+      return "API_KEY environment variable is not set"
     case .unknownTool(let name):
       return "Unknown tool: \(name)"
     case .invalidArguments:

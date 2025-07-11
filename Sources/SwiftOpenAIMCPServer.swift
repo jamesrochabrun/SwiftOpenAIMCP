@@ -186,12 +186,12 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
   private let openAIService: OpenAIService
   
   init() throws {
-    guard let apiKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"] else {
+    guard let apiKey = ProcessInfo.processInfo.environment["API_KEY"] else {
       throw OpenAIServiceError.missingAPIKey
     }
     
     self.apiKey = apiKey
-    self.baseURL = ProcessInfo.processInfo.environment["OPENAI_BASE_URL"]
+    self.baseURL = ProcessInfo.processInfo.environment["API_BASE_URL"]
     
     if let baseURL = baseURL {
       self.openAIService = OpenAIServiceFactory.service(apiKey: .apiKey(apiKey), baseURL: baseURL)
