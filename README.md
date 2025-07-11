@@ -3,7 +3,18 @@
 [![npm version](https://img.shields.io/npm/v/swiftopenai-mcp.svg)](https://www.npmjs.com/package/swiftopenai-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An MCP (Model Context Protocol) server that provides access to OpenAI's APIs through a standardized interface. Built with Swift for high performance and reliability.
+A universal MCP (Model Context Protocol) server that provides access to OpenAI's APIs through a standardized interface. Works with any MCP-compatible client including Claude Desktop, Claude Code, Cursor, Windsurf, VS Code, and more.
+
+## What is this?
+
+This MCP server enables any AI assistant or development tool that supports the Model Context Protocol to interact with OpenAI's APIs. Once configured, your AI assistant can:
+- Have conversations with GPT models
+- Generate images with DALL-E
+- Create embeddings for semantic search
+- List available models
+- Work with OpenAI-compatible providers (Groq, OpenRouter, etc.)
+
+Built with Swift for high performance and reliability.
 
 ## 🚀 Features
 
@@ -29,12 +40,50 @@ npm install -g swiftopenai-mcp
 
 ## 🔧 Configuration
 
-### Claude Desktop
+### Basic Configuration
 
-Add the following to your Claude Desktop configuration file:
+The SwiftOpenAI MCP server uses the standard MCP configuration format. Here's the basic structure:
 
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+```json
+{
+  "mcpServers": {
+    "swiftopenai": {
+      "command": "npx",
+      "args": ["-y", "swiftopenai-mcp"],
+      "env": {
+        "OPENAI_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+### Alternative Providers
+
+To use OpenAI-compatible providers like Groq, OpenRouter, or others:
+
+```json
+{
+  "mcpServers": {
+    "swiftopenai": {
+      "command": "npx",
+      "args": ["-y", "swiftopenai-mcp"],
+      "env": {
+        "OPENAI_API_KEY": "your-provider-api-key",
+        "OPENAI_BASE_URL": "https://api.groq.com/openai/v1"
+      }
+    }
+  }
+}
+```
+
+### Examples for Popular Clients
+
+#### Claude Desktop
+
+Add to your configuration file:
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
@@ -50,7 +99,61 @@ Add the following to your Claude Desktop configuration file:
 }
 ```
 
-### VS Code with Continue Extension
+#### Claude Code
+
+Claude Code automatically detects MCP servers. Add to your project's `.claude/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "swiftopenai": {
+      "command": "npx",
+      "args": ["-y", "swiftopenai-mcp"],
+      "env": {
+        "OPENAI_API_KEY": "sk-proj-..."
+      }
+    }
+  }
+}
+```
+
+#### Cursor
+
+Add to your Cursor settings under MCP Servers:
+
+```json
+{
+  "mcpServers": {
+    "swiftopenai": {
+      "command": "npx",
+      "args": ["-y", "swiftopenai-mcp"],
+      "env": {
+        "OPENAI_API_KEY": "sk-proj-..."
+      }
+    }
+  }
+}
+```
+
+#### Windsurf
+
+Configure in Windsurf's MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "swiftopenai": {
+      "command": "npx",
+      "args": ["-y", "swiftopenai-mcp"],
+      "env": {
+        "OPENAI_API_KEY": "sk-proj-..."
+      }
+    }
+  }
+}
+```
+
+#### VS Code with Continue Extension
 
 Add to your Continue configuration:
 
@@ -75,25 +178,6 @@ Add to your Continue configuration:
 }
 ```
 
-### Alternative Providers
-
-To use alternative OpenAI-compatible providers like Groq or OpenRouter:
-
-```json
-{
-  "mcpServers": {
-    "swiftopenai": {
-      "command": "npx",
-      "args": ["-y", "swiftopenai-mcp"],
-      "env": {
-        "OPENAI_API_KEY": "your-provider-api-key",
-        "OPENAI_BASE_URL": "https://api.groq.com/openai/v1"
-      }
-    }
-  }
-}
-```
-
 ## 🛠️ Available Tools
 
 ### 1. chat_completion
@@ -109,9 +193,15 @@ Send messages to OpenAI chat models and receive responses.
 - `max_tokens`: Maximum tokens to generate
 - `stream`: Enable streaming responses (default: false)
 
-**Example usage in Claude:**
+**Example:**
 ```
-Can you use SwiftOpenAI to ask GPT-4 to write a haiku about coding?
+Tool: chat_completion
+Arguments: {
+  "messages": [
+    {"role": "user", "content": "Write a haiku about coding"}
+  ],
+  "model": "gpt-4o"
+}
 ```
 
 ### 2. image_generation
@@ -127,9 +217,14 @@ Generate images using DALL-E models.
 - `quality`: "standard" or "hd" (DALL-E 3 only, default: "standard")
 - `n`: Number of images (1-10 for DALL-E 2, only 1 for DALL-E 3)
 
-**Example usage in Claude:**
+**Example:**
 ```
-Please use SwiftOpenAI to generate an image of a futuristic city at sunset
+Tool: image_generation
+Arguments: {
+  "prompt": "A futuristic city at sunset",
+  "model": "dall-e-3",
+  "quality": "hd"
+}
 ```
 
 ### 3. list_models
@@ -139,9 +234,12 @@ List all available OpenAI models.
 **Parameters:**
 - `filter`: Optional string to filter model names
 
-**Example usage in Claude:**
+**Example:**
 ```
-Can you use SwiftOpenAI to show me all available GPT models?
+Tool: list_models
+Arguments: {
+  "filter": "gpt"
+}
 ```
 
 ### 4. create_embedding
@@ -152,47 +250,80 @@ Generate embeddings for text input.
 - `input` (required): Text to create embeddings for
 - `model`: Embedding model (default: "text-embedding-ada-002")
 
-**Example usage in Claude:**
+**Example:**
 ```
-Use SwiftOpenAI to create embeddings for "The quick brown fox jumps over the lazy dog"
+Tool: create_embedding
+Arguments: {
+  "input": "The quick brown fox jumps over the lazy dog"
+}
 ```
 
 ## 💡 Usage Examples
 
+> **Note**: The exact syntax for invoking these tools depends on your MCP client. These examples show the tool names and parameters.
+
 ### Basic Chat
 
-Ask Claude to interact with GPT models:
+Have a conversation with GPT models:
 
-```
-Use SwiftOpenAI to ask GPT-4 to explain quantum computing in simple terms
+```json
+{
+  "tool": "chat_completion",
+  "arguments": {
+    "messages": [
+      {"role": "user", "content": "Explain quantum computing in simple terms"}
+    ],
+    "model": "gpt-4o"
+  }
+}
 ```
 
 ### Image Generation
 
-Request image creation:
+Create images with DALL-E:
 
-```
-Can you use SwiftOpenAI to create a DALL-E 3 HD image of a serene Japanese garden with cherry blossoms?
+```json
+{
+  "tool": "image_generation",
+  "arguments": {
+    "prompt": "A serene Japanese garden with cherry blossoms",
+    "model": "dall-e-3",
+    "quality": "hd",
+    "size": "1792x1024"
+  }
+}
 ```
 
 ### Model Exploration
 
 Discover available models:
 
-```
-Use SwiftOpenAI to list all available models and filter for "gpt"
+```json
+{
+  "tool": "list_models",
+  "arguments": {
+    "filter": "gpt"
+  }
+}
 ```
 
 ### Multi-turn Conversations
 
-You can maintain context across messages:
+Maintain context across messages:
 
-```
-Use SwiftOpenAI to start a conversation:
-- System: You are a helpful cooking assistant
-- User: I want to make pasta for dinner
-- Assistant: I'd be happy to help you make pasta! What type of pasta dish are you interested in?
-- User: Something with tomatoes and basil
+```json
+{
+  "tool": "chat_completion",
+  "arguments": {
+    "messages": [
+      {"role": "system", "content": "You are a helpful cooking assistant"},
+      {"role": "user", "content": "I want to make pasta for dinner"},
+      {"role": "assistant", "content": "I'd be happy to help you make pasta! What type of pasta dish are you interested in?"},
+      {"role": "user", "content": "Something with tomatoes and basil"}
+    ],
+    "model": "gpt-4o"
+  }
+}
 ```
 
 ## 🔒 Security Best Practices
@@ -206,21 +337,42 @@ Use SwiftOpenAI to start a conversation:
 
 ### Server not starting
 
-1. Check that your API key is correctly set in the configuration
-2. Ensure you've restarted Claude Desktop after updating the config
-3. Verify the npm package is installed: `npm list -g swiftopenai-mcp`
+1. **Check API key**: Ensure your API key is correctly set in the configuration
+2. **Restart your client**: Most MCP clients require a restart after configuration changes
+3. **Verify installation**: Check if the package is installed: `npm list -g swiftopenai-mcp`
+4. **Check permissions**: Ensure the npm global directory has proper permissions
 
 ### No response from tools
 
-1. Verify your API key has the necessary permissions
-2. Check if you have available API credits
-3. For alternative providers, ensure the base URL is correct
+1. **API key permissions**: Verify your API key has the necessary permissions
+2. **API credits**: Check if you have available API credits in your OpenAI account
+3. **Alternative providers**: For non-OpenAI providers, ensure the base URL is correct
+4. **Network issues**: Check if you can reach the API endpoint from your network
 
-### View logs
+### Debugging
 
-Check Claude Desktop logs for debugging:
+#### Check MCP server output
+Most MCP clients provide ways to view server logs. For example:
+
+**Claude Desktop logs:**
 - macOS: `~/Library/Logs/Claude/mcp-*.log`
 - Windows: `%APPDATA%\Claude\logs\mcp-*.log`
+
+**Other clients:** Check your client's documentation for log locations.
+
+#### Test the server directly
+You can test if the server starts correctly:
+```bash
+npx swiftopenai-mcp
+```
+This should output the MCP initialization message.
+
+### Common Issues
+
+- **"Missing API key" error**: Set the `OPENAI_API_KEY` environment variable in your configuration
+- **"Invalid API key" error**: Double-check your API key is correct and active
+- **Timeout errors**: Some operations (like image generation) can take time; be patient
+- **Rate limit errors**: You may be hitting OpenAI's rate limits; wait a bit and try again
 
 ## 🏗️ Building from Source
 
