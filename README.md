@@ -23,7 +23,8 @@ Built with Swift for high performance and reliability.
 ## 🚀 Features
 
 - **Multi-Provider Support** - Works with 9+ AI providers including OpenAI, Anthropic, Google Gemini, Ollama, Groq, and more
-- **Chat Completions** - Interact with gpt-4o, o3-mini, o3, Claude, Gemini, and other chat models
+- **Chat Completions** - Interact with GPT-5, GPT-4o, o3-mini, o3, Claude, Gemini, and other chat models
+- **Advanced Model Control** - Fine-tune responses with reasoning effort and verbosity parameters
 - **Image Generation** - Create images using DALL-E 2 and DALL-E 3
 - **Embeddings** - Generate text embeddings for semantic search and analysis
 - **Model Listing** - Retrieve available models from any provider
@@ -33,7 +34,7 @@ Built with Swift for high performance and reliability.
 This server works with any **OpenAI-compatible** API endpoint:
 
 ### Fully Compatible
-- **OpenAI** (default) - GPT-4o, o3-mini, o3, DALL-E, embeddings
+- **OpenAI** (default) - GPT-5, GPT-4o, o3-mini, o3, DALL-E, embeddings
 - **Azure OpenAI** - Enterprise OpenAI services with compatible endpoints
 - **Ollama** - Local LLMs with OpenAI-compatible API (`/v1` endpoints)
 - **Groq** - Fast inference using their OpenAI-compatible endpoint
@@ -124,12 +125,26 @@ Send messages to OpenAI GPT models and get responses.
 - **messages** (required) - Array of conversation messages, each with:
   - role: "system", "user", or "assistant"
   - content: The message text
-- **model** - Which model to use (default: "gpt-4o"). Examples: gpt-4o, o3-mini, o3
+- **model** - Which model to use (default: "gpt-4o"). Examples:
+  - GPT-5 family: gpt-5 (complex reasoning), gpt-5-mini (cost-optimized), gpt-5-nano (high-throughput)
+  - GPT-4 family: gpt-4o, gpt-4o-mini
+  - o3 family: o3, o3-mini
 - **temperature** - Creativity level from 0-2 (default: 0.7). Lower = more focused, higher = more creative
 - **max_tokens** - Maximum length of the response
+- **reasoning_effort** - Control reasoning tokens for supported models:
+  - "minimal": Very few reasoning tokens for fastest response (great for coding/instructions)
+  - "low": Reduced reasoning effort
+  - "medium": Balanced reasoning (default)
+  - "high": Maximum reasoning effort
+- **verbosity** - Control output token generation:
+  - "low": Concise responses (e.g., simple code, SQL queries)
+  - "medium": Balanced detail (default)
+  - "high": Thorough explanations (e.g., detailed documentation, code refactoring)
 
 **Example usage:**
-"Ask o3-mini to explain quantum computing in simple terms"
+- "Ask o3-mini to explain quantum computing in simple terms"
+- "Use gpt-5 with high reasoning effort to solve this complex problem"
+- "Generate concise code with gpt-5-mini using low verbosity"
 
 ### image_generation
 Generate images using AI models.
@@ -176,8 +191,9 @@ Create embeddings for text.
 **Powerful use cases:**
 
 **Get a second opinion from another AI:**
-- "Send this entire conversation to o3-mini and ask what it thinks"
+- "Send this entire conversation to gpt-5 with high reasoning effort and ask what it thinks"
 - "Have gpt-4o analyze what we've discussed and suggest improvements"
+- "Use gpt-5-mini with low verbosity for a quick summary"
 
 **Deep analysis:**
 - "Ask o3 to find any logical flaws in our reasoning so far"

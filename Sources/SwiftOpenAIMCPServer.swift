@@ -47,7 +47,7 @@ struct SwiftOpenAIMCPServer: AsyncParsableCommand {
             "model": .object([
               "type": .string("string"),
               "default": .string("gpt-4o"),
-              "description": .string("Model to use (e.g., gpt-4o, gpt-4o-mini, gpt-3.5-turbo)")
+              "description": .string("Model to use (e.g., gpt-4o, gpt-4o-mini, gpt-5, gpt-5-mini, gpt-5-nano, gpt-3.5-turbo)")
             ]),
             "temperature": .object([
               "type": .string("number"),
@@ -57,6 +57,16 @@ struct SwiftOpenAIMCPServer: AsyncParsableCommand {
             "max_tokens": .object([
               "type": .string("integer"),
               "description": .string("Maximum tokens to generate")
+            ]),
+            "reasoning_effort": .object([
+              "type": .string("string"),
+              "enum": .array([.string("minimal"), .string("low"), .string("medium"), .string("high")]),
+              "description": .string("Reasoning effort for models that support it (minimal produces very few reasoning tokens for fastest response)")
+            ]),
+            "verbosity": .object([
+              "type": .string("string"),
+              "enum": .array([.string("low"), .string("medium"), .string("high")]),
+              "description": .string("Controls output token generation (low for concise, high for thorough explanations)")
             ]),
             "stream": .object([
               "type": .string("boolean"),
@@ -245,10 +255,25 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
     let temperature = args["temperature"]?.doubleValue
     let maxTokens = args["max_tokens"]?.intValue
     let stream = args["stream"]?.boolValue ?? false
+    let reasoningEffortString = args["reasoning_effort"]?.stringValue
+    let verbosityString = args["verbosity"]?.stringValue
+    
+    // Convert string values to enums
+    var reasoningEffort: ChatCompletionParameters.ReasoningEffort?
+    if let reasoningEffortString = reasoningEffortString {
+      reasoningEffort = ChatCompletionParameters.ReasoningEffort(rawValue: reasoningEffortString)
+    }
+    
+    var verbosity: ChatCompletionParameters.Verbosity?
+    if let verbosityString = verbosityString {
+      verbosity = ChatCompletionParameters.Verbosity(rawValue: verbosityString)
+    }
     
     let parameters = ChatCompletionParameters(
       messages: messages,
       model: .custom(model),
+      reasoningEffort: reasoningEffort,
+      verbosity: verbosity,
       maxTokens: maxTokens,
       temperature: temperature
     )
@@ -288,8 +313,8 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
     let quality = args["quality"]?.stringValue ?? "standard"
     let n = args["n"]?.intValue ?? 1
     
-    // Use custom model to support any provider's image models
-    let imageModel: CreateImageParameters.Model = .custom(model)
+    // Map model string to enum or use default
+    let imageModel: CreateImageParameters.Model = model == "dall-e-2" ? .dallE2 : .dallE3
     let imageQuality: CreateImageParameters.Quality = quality == "hd" ? .hd : .standard
     
     let parameters = CreateImageParameters(
@@ -367,12 +392,22 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
       throw OpenAIServiceError.missingRequiredField("input")
     }
     
-    let model = args["model"]?.stringValue ?? "text-embedding-ada-002"
+    let modelString = args["model"]?.stringValue ?? "text-embedding-ada-002"
     
-    // Use custom model to support any provider's embedding models
+    // Map model string to enum
+    let embedModel: EmbeddingParameter.Model
+    switch modelString {
+    case "text-embedding-3-large":
+      embedModel = .textEmbedding3Large
+    case "text-embedding-3-small":
+      embedModel = .textEmbedding3Small
+    default:
+      embedModel = .textEmbeddingAda002
+    }
+    
     let parameters = EmbeddingParameter(
       input: input,
-      model: .custom(model),
+      model: embedModel,
       encodingFormat: nil,
       dimensions: nil
     )
