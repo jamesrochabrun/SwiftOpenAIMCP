@@ -157,6 +157,7 @@ Send messages to OpenAI GPT models and get responses.
   - content: The message text
 - **model** - Which model to use (default: "gpt-4o"). Examples:
   - GPT-5 family: gpt-5 (complex reasoning), gpt-5-mini (cost-optimized), gpt-5-nano (high-throughput)
+    - Note: `gpt-5` or `gpt5` automatically maps to `gpt-5-chat-latest` for compatibility
   - GPT-4 family: gpt-4o, gpt-4o-mini
   - o3 family: o3, o3-mini
 - **temperature** - Creativity level from 0-2 (default: 0.7). Lower = more focused, higher = more creative

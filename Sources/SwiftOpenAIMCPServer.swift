@@ -225,6 +225,15 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
     }
   }
   
+  private func normalizeModelName(_ model: String) -> String {
+    // Map gpt5 or gpt-5 to gpt-5-chat-latest
+    let lowercased = model.lowercased()
+    if lowercased == "gpt5" || lowercased == "gpt-5" {
+      return "gpt-5-chat-latest"
+    }
+    return model
+  }
+  
   private func performChatCompletion(arguments: Value?) async throws -> String {
     guard let args = arguments?.objectValue else {
       throw OpenAIServiceError.invalidArguments
@@ -251,7 +260,8 @@ final class OpenAIServiceWrapper: @unchecked Sendable {
     }
     
     // Parse optional parameters
-    let model = args["model"]?.stringValue ?? "gpt-4o"
+    let rawModel = args["model"]?.stringValue ?? "gpt-4o"
+    let model = normalizeModelName(rawModel)
     let temperature = args["temperature"]?.doubleValue
     let maxTokens = args["max_tokens"]?.intValue
     let stream = args["stream"]?.boolValue ?? false
