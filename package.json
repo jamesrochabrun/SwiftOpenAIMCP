@@ -1,6 +1,6 @@
 {
   "name": "swiftopenai-mcp",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "MCP server for SwiftOpenAI - access OpenAI APIs through Model Context Protocol",
   "keywords": [
     "mcp",

@@ -61,6 +61,36 @@ npm install -g swiftopenai-mcp
 
 - Node.js 16 or higher
 
+## 🔄 Updating
+
+### Check for updates
+
+Check if an update is available:
+```bash
+npm outdated -g swiftopenai-mcp
+```
+
+### Update to latest version
+
+Update to the latest version:
+```bash
+npm update -g swiftopenai-mcp
+```
+
+Or force update to the latest version:
+```bash
+npm install -g swiftopenai-mcp@latest
+```
+
+### Verify your version
+
+After updating, confirm the new version:
+```bash
+npm list -g swiftopenai-mcp
+```
+
+**Note:** Check the [releases page](https://github.com/jamesrochabrun/SwiftOpenAIMCP/releases) for any breaking changes before updating.
+
 ## 🔧 Configuration
 
 Add this configuration to your MCP client:
